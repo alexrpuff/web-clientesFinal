@@ -19,8 +19,9 @@ O **WebAlex** é um sistema de controle de clientes: permite cadastrar clientes 
 | `/consultar-clientes` | Lista em ordem alfabética com filtro |
 | `/editar-cliente/:id` | Edição do cliente e de um endereço (ou inclusão de novo endereço) |
 | `/excluir-cliente/:id` | Confirmação e exclusão |
+| `/erro/:codigo` | Página de erro amigável (400, 404, 409 e 500) |
 
-Qualquer rota desconhecida (ou a raiz `/`) redireciona para `/inicio`.
+A raiz `/` redireciona para `/inicio`; qualquer rota desconhecida exibe a página de erro 404.
 
 ## Telas
 
@@ -95,15 +96,21 @@ Exibe os dados do cliente e todos os seus endereços para conferência antes da 
 
 ### Tratamento de erros
 
-As mensagens exibidas nas telas vêm da API, conforme o status da resposta:
+Os erros `400`, `404`, `409` e `500` retornados pela API levam o usuário à **página de erro** (`/erro/:codigo`), que mostra uma explicação amigável, os detalhes enviados pela API e os próximos passos:
 
-| Situação | Retorno da API | Exibição na tela |
-|---|---|---|
-| Dados inválidos | `400` com os erros de cada campo | Mensagens de todos os campos inválidos |
-| Cliente ou endereço não encontrado | `404` com a mensagem | Mensagem de erro |
-| CPF já cadastrado | `409` com a mensagem | Mensagem de erro |
-| Erro interno | `500` com a mensagem | Mensagem de erro |
-| API fora do ar | sem resposta | "Não foi possível conectar à API. Verifique se o backend está em execução." |
+| Situação | Retorno da API | Página de erro | Ações |
+|---|---|---|---|
+| Dados inválidos | `400` com os erros de cada campo | "Alguns dados não foram aceitos" + erros de cada campo | **Voltar e corrigir**, Ir para o início |
+| Cliente ou endereço não encontrado | `404` com a mensagem | "Não encontramos o que você procurava" | Consultar clientes, Ir para o início |
+| CPF já cadastrado | `409` com a mensagem | "Este cadastro já existe" | **Voltar e corrigir**, Ir para o início |
+| Erro interno | `500` com a mensagem | "Algo deu errado do nosso lado" | **Tentar novamente**, Ir para o início |
+
+- **Dados preservados:** quando o erro acontece ao salvar o cadastro ou a edição, os dados digitados são guardados. **Voltar e corrigir** retorna ao formulário já preenchido (e com os campos inválidos destacados).
+- **Tentar novamente** retorna à página onde o erro aconteceu.
+- **Rota inexistente:** qualquer endereço desconhecido exibe a página de erro `404`, informando o endereço acessado.
+- **API fora do ar:** sem resposta da API, a própria página exibe o aviso "Não foi possível conectar à API. Verifique se o backend está em execução.".
+
+A lógica fica em `services/erro-service.ts` (redirecionamento, detalhes do erro e rascunho do formulário) e `pages/erro/` (página de erro).
 
 ## Identidade visual
 
@@ -120,17 +127,21 @@ As cores são definidas como variáveis CSS (`--alex-preto`, `--alex-vermelho`, 
 ```
 src/app
 ├── models/cliente.ts           # Interfaces (DTOs da API) e lista de UFs
-├── services/cliente-service.ts # Chamadas HTTP e tratamento das mensagens de erro
+├── services
+│   ├── cliente-service.ts      # Chamadas HTTP e mensagem de API fora do ar
+│   └── erro-service.ts         # Redirecionamento para a página de erro e rascunho dos formulários
 ├── shared
 │   ├── navbar/                 # Barra de navegação
 │   ├── cliente-form/           # Campos e validações do cliente/endereço (cadastro e edição)
 │   └── pipes/                  # Formatação de CPF e CEP
-└── pages/clientes
-    ├── inicio/                 # Dashboard
-    ├── cadastrar-cliente/
-    ├── consultar-clientes/
-    ├── editar-cliente/
-    └── excluir-cliente/
+└── pages
+    ├── erro/                   # Página de erro amigável (400, 404, 409 e 500)
+    └── clientes
+        ├── inicio/             # Dashboard
+        ├── cadastrar-cliente/
+        ├── consultar-clientes/
+        ├── editar-cliente/
+        └── excluir-cliente/
 ```
 
 ## Integração com a API

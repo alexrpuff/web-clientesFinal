@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Cliente } from '../../../models/cliente';
 import { ClienteService } from '../../../services/cliente-service';
+import { ErroService } from '../../../services/erro-service';
 import { CpfPipe } from '../../../shared/pipes/cpf-pipe';
 import { CepPipe } from '../../../shared/pipes/cep-pipe';
 
@@ -18,6 +19,7 @@ export class ExcluirCliente {
   //Injeção de dependência
   private clienteService = inject(ClienteService);
   private route = inject(ActivatedRoute);
+  private erroService = inject(ErroService);
 
   //Atributos
   cliente = signal<Cliente | null>(null);
@@ -39,7 +41,10 @@ export class ExcluirCliente {
           this.carregando.set(false);
         },
         error: (e: HttpErrorResponse) => {
-          this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          //Erros 404 e 500 vão para a página de erro
+          if (!this.erroService.redirecionar(e)) {
+            this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          }
           this.carregando.set(false);
         }
       });
@@ -62,7 +67,10 @@ export class ExcluirCliente {
           this.excluindo.set(false);
         },
         error: (e: HttpErrorResponse) => {
-          this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          //Erros 404 e 500 vão para a página de erro
+          if (!this.erroService.redirecionar(e)) {
+            this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          }
           this.excluindo.set(false);
         }
       });

@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Cliente } from '../../../models/cliente';
 import { ClienteService } from '../../../services/cliente-service';
+import { ErroService } from '../../../services/erro-service';
 import { CpfPipe } from '../../../shared/pipes/cpf-pipe';
 import { CepPipe } from '../../../shared/pipes/cep-pipe';
 
@@ -17,6 +18,7 @@ export class ConsultarClientes {
 
   //Injeção de dependência
   private clienteService = inject(ClienteService);
+  private erroService = inject(ErroService);
 
   //Atributos
   clientes = signal<Cliente[]>([]);
@@ -45,7 +47,10 @@ export class ConsultarClientes {
           this.carregando.set(false);
         },
         error: (e: HttpErrorResponse) => {
-          this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          //Erros 400, 404, 409 e 500 vão para a página de erro
+          if (!this.erroService.redirecionar(e)) {
+            this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          }
           this.carregando.set(false);
         }
       });

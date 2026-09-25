@@ -4,7 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CriarClienteRequest } from '../../../models/cliente';
 import { ClienteService } from '../../../services/cliente-service';
-import { ClienteForm, criarFormCliente } from '../../../shared/cliente-form/cliente-form';
+import { ErroService } from '../../../services/erro-service';
+import { ClienteForm, DadosFormCliente, criarFormCliente } from '../../../shared/cliente-form/cliente-form';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink, ClienteForm],
@@ -16,6 +17,7 @@ export class CadastrarCliente {
 
   //Injeção de dependência
   private clienteService = inject(ClienteService);
+  private erroService = inject(ErroService);
 
   //Atributos
   mensagemSucesso = signal('');
@@ -24,6 +26,16 @@ export class CadastrarCliente {
 
   //Formulário reativo
   formCliente = criarFormCliente();
+
+  //Função executada ao abrir a página
+  ngOnInit() {
+    //Restaurando os dados digitados antes de um erro ("Voltar e corrigir" na página de erro)
+    const rascunho = this.erroService.recuperarRascunho<DadosFormCliente>();
+    if (rascunho) {
+      this.formCliente.setValue(rascunho);
+      this.formCliente.markAllAsTouched();
+    }
+  }
 
   //Função executada no submit do formulário
   cadastrarCliente() {
@@ -50,7 +62,10 @@ export class CadastrarCliente {
           this.enviando.set(false);
         },
         error: (e: HttpErrorResponse) => {
-          this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          //Erros 400, 409 e 500 vão para a página de erro, guardando os dados digitados
+          if (!this.erroService.redirecionar(e, this.formCliente.getRawValue())) {
+            this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          }
           this.enviando.set(false);
         }
       });

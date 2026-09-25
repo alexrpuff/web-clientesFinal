@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm erro-card">
+            <div class="card-body p-4 p-md-5 text-center">
+
+                <div class="erro-codigo" aria-hidden="true">{{ codigo() }}</div>
+
+                <h3 class="mb-3">{{ conteudo().titulo }}</h3>
+                <p class="text-muted mb-4">
+                    {{ conteudo().descricao }}
+                    @if(permiteCorrigir()) {
+                        Ao voltar ao formulário, os dados que você digitou estarão preenchidos.
+                    }
+                </p>
+
+                @if(mensagens().length > 0) {
+                    <div class="erro-detalhes text-start mb-4" role="alert">
+                        <div class="fw-semibold mb-1">Detalhes</div>
+                        <ul class="mb-0">
+                            @for(mensagem of mensagens(); track $index) {
+                                <li>{{ mensagem }}</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    @if(permiteCorrigir()) {
+                        <a [routerLink]="origem()" class="btn shadow-sm">Voltar e corrigir</a>
+                    }
+                    @if(permiteTentarNovamente()) {
+                        <a [routerLink]="origem()" class="btn shadow-sm">Tentar novamente</a>
+                    }
+                    @if(codigo() === 404) {
+                        <a routerLink="/consultar-clientes" class="btn shadow-sm">Consultar clientes</a>
+                    }
+                    <a routerLink="/inicio" class="btn shadow-sm">Ir para o início</a>
+                </div>
+
+                <p class="text-muted small mt-4 mb-0">Código do erro: {{ codigo() }}</p>
+
+            </div>
+        </div>
+    </div>
+</div>

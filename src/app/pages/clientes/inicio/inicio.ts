@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Cliente } from '../../../models/cliente';
 import { ClienteService } from '../../../services/cliente-service';
+import { ErroService } from '../../../services/erro-service';
 
 //Quantidade de clientes em uma localidade (estado ou cidade)
 export interface Localidade {
@@ -24,6 +25,7 @@ export class Inicio {
 
   //Injeção de dependência
   private clienteService = inject(ClienteService);
+  private erroService = inject(ErroService);
 
   //Atributos
   clientes = signal<Cliente[]>([]);
@@ -89,7 +91,10 @@ export class Inicio {
           this.carregando.set(false);
         },
         error: (e: HttpErrorResponse) => {
-          this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          //Erros 400, 404, 409 e 500 vão para a página de erro
+          if (!this.erroService.redirecionar(e)) {
+            this.mensagemErro.set(this.clienteService.extrairMensagemErro(e));
+          }
           this.carregando.set(false);
         }
       });

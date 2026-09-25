@@ -28,6 +28,9 @@ export function criarFormCliente() {
 
 export type FormCliente = ReturnType<typeof criarFormCliente>;
 
+//Valores preenchidos no formulário (usados como rascunho ao ir para a página de erro)
+export type DadosFormCliente = ReturnType<FormCliente['getRawValue']>;
+
 /*
     Campos do formulário de cliente e endereço,
     compartilhados pelas páginas de cadastro e edição
