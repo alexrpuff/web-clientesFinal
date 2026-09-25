@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-0">Consultar clientes</h3>
+        <p class="text-muted mb-0">Clientes cadastrados em ordem alfabética.</p>
+    </div>
+    <a routerLink="/cadastrar-cliente" class="btn btn-success shadow-sm">Novo cliente</a>
+</div>
+
+@if(mensagemErro()) {
+    <div class="alert alert-danger" role="alert">
+        <strong>{{ mensagemErro() }}</strong>
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="search" class="form-control" placeholder="Filtrar por nome, email ou CPF"
+                    aria-label="Filtrar clientes" (input)="filtrar($event)"/>
+            </div>
+            <div class="col-md-6 text-md-end align-self-center text-muted small mt-2 mt-md-0">
+                {{ clientesFiltrados().length }} de {{ clientes().length }} cliente(s)
+            </div>
+        </div>
+
+        @if(carregando()) {
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+            </div>
+        }
+        @else if(clientesFiltrados().length === 0) {
+            <div class="text-center text-muted py-5">
+                @if(clientes().length === 0) {
+                    Nenhum cliente cadastrado. <a routerLink="/cadastrar-cliente">Cadastre o primeiro cliente</a>.
+                } @else {
+                    Nenhum cliente encontrado para o filtro informado.
+                }
+            </div>
+        }
+        @else {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>CPF</th>
+                            <th>Nascimento</th>
+                            <th>Endereços</th>
+                            <th class="text-end">Operações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(cliente of clientesFiltrados(); track cliente.id) {
+                            <tr>
+                                <td class="fw-semibold">{{ cliente.nome }}</td>
+                                <td>{{ cliente.email }}</td>
+                                <td class="text-nowrap">{{ cliente.cpf | cpf }}</td>
+                                <td>{{ cliente.dataNascimento | date:'dd/MM/yyyy':'UTC' }}</td>
+                                <td class="small">
+                                    @for(endereco of cliente.enderecos; track endereco.id) {
+                                        <div>
+                                            {{ endereco.logradouro }}, {{ endereco.numero }}
+                                            @if(endereco.complemento) { - {{ endereco.complemento }} }
+                                            <br/>
+                                            <span class="text-muted">
+                                                {{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.uf }} - CEP {{ endereco.cep | cep }}
+                                            </span>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a [routerLink]="['/editar-cliente', cliente.id]" class="btn btn-sm btn-outline-primary me-2">Editar</a>
+                                    <a [routerLink]="['/excluir-cliente', cliente.id]" class="btn btn-sm btn-outline-danger">Excluir</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+</div>

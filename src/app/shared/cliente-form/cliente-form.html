@@ -1,0 +1,105 @@
+<div [formGroup]="form()">
+
+    <h5 class="text-primary mb-3">Dados do cliente</h5>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label for="nome" class="form-label">Nome do cliente:</label>
+            <input id="nome" type="text" formControlName="nome" class="form-control"
+                placeholder="Nome completo" [class.is-invalid]="invalido('nome')"/>
+            @if(invalido('nome')) {
+                <div class="invalid-feedback">O nome é obrigatório e deve ter de 8 a 100 caracteres.</div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email:</label>
+            <input id="email" type="email" formControlName="email" class="form-control"
+                placeholder="cliente@email.com" [class.is-invalid]="invalido('email')"/>
+            @if(invalido('email')) {
+                <div class="invalid-feedback">O email é obrigatório e deve ser válido.</div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="cpf" class="form-label">CPF:</label>
+            <input id="cpf" type="text" inputmode="numeric" maxlength="11" formControlName="cpf" class="form-control"
+                placeholder="Somente números" [class.is-invalid]="invalido('cpf')"/>
+            @if(invalido('cpf')) {
+                <div class="invalid-feedback">O CPF é obrigatório e deve ter 11 dígitos numéricos.</div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="dataNascimento" class="form-label">Data de nascimento:</label>
+            <input id="dataNascimento" type="date" formControlName="dataNascimento" class="form-control"
+                [class.is-invalid]="invalido('dataNascimento')"/>
+            @if(invalido('dataNascimento')) {
+                <div class="invalid-feedback">A data de nascimento é obrigatória.</div>
+            }
+        </div>
+    </div>
+
+    <h5 class="text-primary mb-3">Endereço</h5>
+
+    <!-- Conteúdo extra da página (ex.: seleção do endereço na edição) -->
+    <ng-content/>
+
+    <div class="row g-3" formGroupName="endereco">
+        <div class="col-md-3">
+            <label for="cep" class="form-label">CEP:</label>
+            <input id="cep" type="text" inputmode="numeric" maxlength="8" formControlName="cep" class="form-control"
+                placeholder="Somente números" [class.is-invalid]="invalido('endereco.cep')"/>
+            @if(invalido('endereco.cep')) {
+                <div class="invalid-feedback">O CEP deve ter 8 dígitos numéricos.</div>
+            }
+        </div>
+        <div class="col-md-7">
+            <label for="logradouro" class="form-label">Logradouro:</label>
+            <input id="logradouro" type="text" formControlName="logradouro" class="form-control"
+                placeholder="Rua, avenida..." [class.is-invalid]="invalido('endereco.logradouro')"/>
+            @if(invalido('endereco.logradouro')) {
+                <div class="invalid-feedback">O logradouro é obrigatório.</div>
+            }
+        </div>
+        <div class="col-md-2">
+            <label for="numero" class="form-label">Número:</label>
+            <input id="numero" type="text" formControlName="numero" class="form-control"
+                [class.is-invalid]="invalido('endereco.numero')"/>
+            @if(invalido('endereco.numero')) {
+                <div class="invalid-feedback">Obrigatório.</div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="complemento" class="form-label">Complemento:</label>
+            <input id="complemento" type="text" formControlName="complemento" class="form-control"
+                placeholder="Opcional"/>
+        </div>
+        <div class="col-md-3">
+            <label for="bairro" class="form-label">Bairro:</label>
+            <input id="bairro" type="text" formControlName="bairro" class="form-control"
+                [class.is-invalid]="invalido('endereco.bairro')"/>
+            @if(invalido('endereco.bairro')) {
+                <div class="invalid-feedback">O bairro é obrigatório.</div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="cidade" class="form-label">Cidade:</label>
+            <input id="cidade" type="text" formControlName="cidade" class="form-control"
+                [class.is-invalid]="invalido('endereco.cidade')"/>
+            @if(invalido('endereco.cidade')) {
+                <div class="invalid-feedback">A cidade é obrigatória.</div>
+            }
+        </div>
+        <div class="col-md-2">
+            <label for="uf" class="form-label">UF:</label>
+            <select id="uf" formControlName="uf" class="form-select" [class.is-invalid]="invalido('endereco.uf')">
+                <option value="">Selecione</option>
+                @for(uf of ufs; track uf) {
+                    <option [value]="uf">{{ uf }}</option>
+                }
+            </select>
+            @if(invalido('endereco.uf')) {
+                <div class="invalid-feedback">Obrigatório.</div>
+            }
+        </div>
+    </div>
+
+</div>

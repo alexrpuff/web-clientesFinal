@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-0">Excluir cliente</h3>
+        <p class="text-muted mb-0">Confira os dados antes de confirmar a exclusão.</p>
+    </div>
+    <a routerLink="/consultar-clientes" class="btn btn-outline-secondary">Voltar para consulta</a>
+</div>
+
+@if(mensagemSucesso()) {
+    <div class="alert alert-success" role="status">
+        <strong>{{ mensagemSucesso() }}</strong>
+    </div>
+}
+@else if(mensagemErro()) {
+    <div class="alert alert-danger" role="alert">
+        <strong>{{ mensagemErro() }}</strong>
+    </div>
+}
+
+@if(carregando()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+}
+@else if(cliente(); as cliente) {
+    <div class="card shadow-sm" [class.opacity-50]="excluido()">
+        <div class="card-body p-4">
+
+            <h5 class="text-primary mb-3">Dados do cliente</h5>
+            <dl class="row mb-4">
+                <dt class="col-sm-3">Nome</dt>
+                <dd class="col-sm-9">{{ cliente.nome }}</dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">{{ cliente.email }}</dd>
+                <dt class="col-sm-3">CPF</dt>
+                <dd class="col-sm-9">{{ cliente.cpf | cpf }}</dd>
+                <dt class="col-sm-3">Data de nascimento</dt>
+                <dd class="col-sm-9">{{ cliente.dataNascimento | date:'dd/MM/yyyy':'UTC' }}</dd>
+            </dl>
+
+            <h5 class="text-primary mb-3">Endereços ({{ cliente.enderecos.length }})</h5>
+            <ul class="list-group mb-4">
+                @for(endereco of cliente.enderecos; track endereco.id) {
+                    <li class="list-group-item">
+                        {{ endereco.logradouro }}, {{ endereco.numero }}
+                        @if(endereco.complemento) { - {{ endereco.complemento }} }
+                        <br/>
+                        <span class="text-muted small">
+                            {{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.uf }} - CEP {{ endereco.cep | cep }}
+                        </span>
+                    </li>
+                }
+            </ul>
+
+            @if(!excluido()) {
+                <div class="alert alert-warning">
+                    Esta operação não pode ser desfeita. O cliente e todos os seus endereços serão excluídos.
+                </div>
+                <button type="button" class="btn btn-danger shadow-sm" (click)="excluirCliente()" [disabled]="excluindo()">
+                    {{ excluindo() ? 'Excluindo...' : 'Confirmar exclusão' }}
+                </button>
+            }
+
+        </div>
+    </div>
+}

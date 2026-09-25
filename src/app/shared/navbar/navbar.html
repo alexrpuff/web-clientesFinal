@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container">
+
+        <!-- Logo / Nome do sistema -->
+        <a class="navbar-brand fw-bold" routerLink="/inicio">
+            WebClientes
+        </a>
+
+        <!-- Botão responsivo -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarClientes"
+            aria-controls="navbarClientes" aria-expanded="false" aria-label="Alternar navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarClientes">
+
+            <!-- Links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/inicio" routerLinkActive="active">
+                        Início
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/cadastrar-cliente" routerLinkActive="active">
+                        Cadastrar cliente
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/consultar-clientes" routerLinkActive="active">
+                        Consultar clientes
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
