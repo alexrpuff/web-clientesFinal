@@ -1,29 +1,134 @@
-<div class="mb-4">
-    <h3>Controle de clientes</h3>
-    <p class="text-muted">Cadastre, consulte, edite e exclua clientes e seus endereços.</p>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h3 class="mb-0">Dashboard</h3>
+        <p class="text-muted mb-0">Indicadores dos clientes cadastrados.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a routerLink="/cadastrar-cliente" class="btn shadow-sm">Novo cliente</a>
+        <a routerLink="/consultar-clientes" class="btn shadow-sm">Consultar clientes</a>
+    </div>
 </div>
 
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">Cadastrar cliente</h5>
-                <p class="card-text text-muted">
-                    Registre um novo cliente com o seu endereço. O cliente recebe um email de confirmação do cadastro.
-                </p>
-                <a routerLink="/cadastrar-cliente" class="btn btn-success shadow-sm">Novo cliente</a>
+@if(mensagemErro()) {
+    <div class="alert alert-danger" role="alert">
+        <strong>{{ mensagemErro() }}</strong>
+    </div>
+}
+
+@if(carregando()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+}
+@else if(!mensagemErro()) {
+
+    <!-- Indicadores -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+            <div class="card shadow-sm h-100 indicador indicador-destaque">
+                <div class="card-body">
+                    <div class="indicador-rotulo">Clientes cadastrados</div>
+                    <div class="indicador-valor">{{ totalClientes() }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card shadow-sm h-100 indicador">
+                <div class="card-body">
+                    <div class="indicador-rotulo">Estados atendidos</div>
+                    <div class="indicador-valor">{{ clientesPorEstado().length }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card shadow-sm h-100 indicador">
+                <div class="card-body">
+                    <div class="indicador-rotulo">Cidades atendidas</div>
+                    <div class="indicador-valor">{{ clientesPorCidade().length }}</div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">Consultar clientes</h5>
-                <p class="card-text text-muted">
-                    Veja todos os clientes em ordem alfabética, com os seus endereços, e acesse a edição ou exclusão.
-                </p>
-                <a routerLink="/consultar-clientes" class="btn btn-primary shadow-sm">Ver clientes</a>
+
+    @if(totalClientes() === 0) {
+        <div class="card shadow-sm">
+            <div class="card-body text-center text-muted py-5">
+                Nenhum cliente cadastrado. <a routerLink="/cadastrar-cliente">Cadastre o primeiro cliente</a>.
             </div>
         </div>
-    </div>
-</div>
+    }
+    @else {
+        <div class="row g-4">
+
+            <!-- Clientes por estado -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Clientes por estado</h5>
+                        <p class="text-muted small mb-3">Quantidade de clientes com endereço em cada UF.</p>
+
+                        <ul class="grafico-barras list-unstyled mb-0">
+                            @for(estado of clientesPorEstado(); track estado.uf) {
+                                <li class="grafico-linha" tabindex="0"
+                                    [attr.aria-label]="estado.uf + ': ' + estado.quantidade + ' cliente(s), ' + (estado.percentual | number:'1.0-0') + '%'">
+                                    <span class="grafico-rotulo">{{ estado.uf }}</span>
+                                    <span class="grafico-trilho">
+                                        <span class="grafico-barra" [style.width.%]="larguraBarra(estado.quantidade)"></span>
+                                    </span>
+                                    <span class="grafico-valor">{{ estado.quantidade }}</span>
+
+                                    <span class="grafico-dica" role="tooltip">
+                                        <strong>{{ estado.uf }}</strong> ·
+                                        {{ estado.quantidade }} cliente(s) ({{ estado.percentual | number:'1.0-0' }}%)
+                                        <br/>
+                                        <span class="text-white-50">{{ estado.cidades?.join(', ') }}</span>
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clientes por cidade -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Clientes por cidade</h5>
+                        <p class="text-muted small mb-3">Localidade dos endereços cadastrados.</p>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cidade</th>
+                                        <th>UF</th>
+                                        <th class="text-end">Clientes</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for(cidade of clientesPorCidade(); track cidade.nome + cidade.uf) {
+                                        <tr>
+                                            <td class="fw-semibold">{{ cidade.nome }}</td>
+                                            <td>{{ cidade.uf }}</td>
+                                            <td class="text-end numero">{{ cidade.quantidade }}</td>
+                                            <td class="text-end numero text-muted">{{ cidade.percentual | number:'1.0-0' }}%</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="text-muted small mt-3 mb-0">
+            Um cliente com endereços em mais de uma localidade é contado em cada uma delas.
+        </p>
+    }
+}

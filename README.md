@@ -12,7 +12,7 @@ Frontend **Angular 22** + **Bootstrap 5** integrado à API `clientesApi` (projet
 
 | Rota | Página |
 |---|---|
-| `/inicio` | Página inicial |
+| `/inicio` | Dashboard: total de clientes e localidades (por estado e por cidade) |
 | `/cadastrar-cliente` | Cadastro de cliente e endereço |
 | `/consultar-clientes` | Lista em ordem alfabética com filtro |
 | `/editar-cliente/:id` | Edição do cliente e de um endereço (ou inclusão de novo endereço) |

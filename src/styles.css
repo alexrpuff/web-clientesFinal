@@ -2,3 +2,67 @@
 body {
   min-height: 100vh;
 }
+
+/*
+  Identidade visual WebAlex: cores do logotipo
+  (preto, vermelho e branco), aplicadas sobre as
+  variáveis do Bootstrap
+*/
+:root {
+  --alex-preto: #000000;
+  --alex-vermelho: #f80a14;
+  --alex-vermelho-rgb: 248, 10, 20;
+  --alex-vermelho-escuro: #c8070f;
+  --alex-branco: #ffffff;
+
+  --bs-primary: var(--alex-vermelho);
+  --bs-primary-rgb: var(--alex-vermelho-rgb);
+  --bs-link-color: var(--alex-vermelho);
+  --bs-link-color-rgb: var(--alex-vermelho-rgb);
+  --bs-link-hover-color: var(--alex-vermelho-escuro);
+  --bs-link-hover-color-rgb: 200, 7, 15;
+  --bs-focus-ring-color: rgba(var(--alex-vermelho-rgb), 0.25);
+}
+
+/* Botões: fundo preto, letras vermelhas e hover branco (todas as variantes) */
+.btn {
+  --bs-btn-color: var(--alex-vermelho);
+  --bs-btn-bg: var(--alex-preto);
+  --bs-btn-border-color: var(--alex-preto);
+  --bs-btn-hover-color: var(--alex-branco);
+  --bs-btn-hover-bg: var(--alex-preto);
+  --bs-btn-hover-border-color: var(--alex-preto);
+  --bs-btn-active-color: var(--alex-branco);
+  --bs-btn-active-bg: var(--alex-preto);
+  --bs-btn-active-border-color: var(--alex-vermelho);
+  --bs-btn-disabled-color: var(--alex-vermelho);
+  --bs-btn-disabled-bg: var(--alex-preto);
+  --bs-btn-disabled-border-color: var(--alex-preto);
+  --bs-btn-focus-shadow-rgb: var(--alex-vermelho-rgb);
+  font-weight: 600;
+}
+
+/* Barra de navegação: link ativo em vermelho, hover branco */
+.navbar {
+  --bs-navbar-active-color: var(--alex-vermelho);
+  --bs-navbar-hover-color: var(--alex-branco);
+}
+
+/* Campos de formulário com foco em vermelho */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--alex-vermelho);
+  box-shadow: 0 0 0 0.25rem rgba(var(--alex-vermelho-rgb), 0.25);
+}
+
+.form-check-input:checked {
+  background-color: var(--alex-vermelho);
+  border-color: var(--alex-vermelho);
+}
+
+/* Cabeçalho das tabelas no preto do logotipo */
+.table > thead.table-light {
+  --bs-table-bg: var(--alex-preto);
+  --bs-table-color: var(--alex-branco);
+}

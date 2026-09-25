@@ -19,6 +19,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.navbar-brand')?.textContent).toContain('WebClientes');
+    expect(compiled.querySelector('.navbar-brand img')?.getAttribute('alt')).toBe('WebAlex');
   });
 });

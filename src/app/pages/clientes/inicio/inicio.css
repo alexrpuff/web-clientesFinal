@@ -1,0 +1,103 @@
+/* Indicadores (stat tiles) */
+.indicador-rotulo {
+  color: var(--bs-secondary-color);
+  font-size: 0.875rem;
+}
+
+.indicador-valor {
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Indicador principal no preto do logotipo, com faixa vermelha */
+.indicador-destaque {
+  background-color: var(--alex-preto);
+  border-color: var(--alex-preto);
+  border-left: 4px solid var(--alex-vermelho);
+  color: var(--alex-branco);
+}
+
+.indicador-destaque .indicador-rotulo {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.indicador-destaque .indicador-valor {
+  font-size: 3rem;
+}
+
+/* Gráfico de barras horizontais: clientes por estado */
+.grafico-linha {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.375rem 0.25rem;
+  border-radius: 4px;
+  outline: none;
+}
+
+.grafico-linha:hover,
+.grafico-linha:focus-visible {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.grafico-rotulo {
+  font-weight: 600;
+}
+
+.grafico-trilho {
+  display: block;
+  height: 16px;
+  border-left: 1px solid var(--bs-border-color);
+}
+
+.grafico-barra {
+  display: block;
+  height: 100%;
+  background-color: var(--alex-vermelho);
+  /* Ponta arredondada, base reta */
+  border-radius: 0 4px 4px 0;
+  transition: background-color 0.15s;
+}
+
+.grafico-linha:hover .grafico-barra,
+.grafico-linha:focus-visible .grafico-barra {
+  background-color: var(--alex-vermelho-escuro);
+}
+
+.grafico-valor,
+.numero {
+  font-variant-numeric: tabular-nums;
+}
+
+.grafico-valor {
+  text-align: right;
+  color: var(--bs-secondary-color);
+}
+
+/* Dica exibida ao passar o mouse (ou focar) na linha */
+.grafico-dica {
+  position: absolute;
+  left: 3.25rem;
+  bottom: calc(100% + 4px);
+  z-index: 10;
+  max-width: 18rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 4px;
+  background-color: var(--alex-preto);
+  color: var(--alex-branco);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.1s;
+}
+
+.grafico-linha:hover .grafico-dica,
+.grafico-linha:focus-visible .grafico-dica {
+  opacity: 1;
+  visibility: visible;
+}
